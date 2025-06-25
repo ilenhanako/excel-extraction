@@ -4,13 +4,14 @@ Example script demonstrating Excel data extraction using eparse.
 """
 
 import pandas as pd
-import subprocess
+import subprocess #runs eparse cli
 import os
 import tempfile
 from pathlib import Path
 
 def create_sample_excel():
     """Create a sample Excel file for testing."""
+    #employees sheet
     data = {
         'Name': ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'Diana Prince'],
         'Age': [25, 30, 35, 28],
@@ -23,7 +24,7 @@ def create_sample_excel():
     filename = 'sample_data.xlsx'
     df.to_excel(filename, index=False, sheet_name='Employees')
     
-    # Create a second sheet with different data
+    #sales sheet
     sales_data = {
         'Product': ['Laptop', 'Phone', 'Tablet', 'Monitor'],
         'Q1_Sales': [120, 200, 85, 45],
@@ -32,6 +33,7 @@ def create_sample_excel():
         'Q4_Sales': [125, 190, 100, 55]
     }
     
+    #add multiple sheets to the same excel file
     with pd.ExcelWriter(filename, mode='a', if_sheet_exists='replace') as writer:
         pd.DataFrame(sales_data).to_excel(writer, sheet_name='Sales', index=False)
     
@@ -49,7 +51,7 @@ def parse_excel_with_eparse(filename):
         print("=== EPARSE VERBOSE OUTPUT ===")
         print(result.stdout)
         
-        # Parse and output to console
+        # Data Extraction:Parse and output to console
         result = subprocess.run([
             'eparse', '-f', filename, '-o', 'stdout:///', 'parse'
         ], capture_output=True, text=True, check=True)
